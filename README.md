@@ -7,8 +7,8 @@ This is a simple library for C++ to analyse command line.
 This library only depends on STL.
 # Compiler Support
  - MSVC-2015  
- - g++-4.8.1(-std=c++14)  
- - clang-3.4(-std=c++14)
+ - g++-4.8.1(-std=c++1y)  
+ - clang-3.4(-std=c++1y)
 
 # License
 Codes covered by the MIT License.
