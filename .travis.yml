@@ -7,7 +7,7 @@ matrix:
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.9']
+          packages: ['g++-4.9', 'g++-4.9-multilib']
       env:
         - CXX=g++-4.9
         - CX=g++-4.9
