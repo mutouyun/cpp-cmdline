@@ -89,7 +89,7 @@ public:
         }
     }
 
-    void exec(int argc, char* argv[])
+    void exec(int argc, const char * const argv[])
     {
         path_ = argv[0];
         if (argc == 1) this->print_usage();
