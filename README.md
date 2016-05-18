@@ -1,5 +1,8 @@
 # An easy way to analyse command line in C++.
 
+[![Build Status](https://travis-ci.org/mutouyun/cpp-cmdline.svg?branch=master)](https://travis-ci.org/mutouyun/cpp-cmdline)
+[![Build status](https://ci.appveyor.com/api/projects/status/e8ci4mtpyb1gy936/branch/master?svg=true)](https://ci.appveyor.com/project/mutouyun/cpp-cmdline)
+
 This is a simple library for C++ to analyse command line.  
 This library only depends on STL.
 # Compiler Support
