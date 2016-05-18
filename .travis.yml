@@ -7,7 +7,7 @@ matrix:
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.9', 'g++-4.9-multilib']
+          packages: ['g++-4.9', 'g++-4.9-multilib', 'linux-libc-dev']
       env:
         - CXX=g++-4.9
         - CX=g++-4.9
@@ -18,7 +18,7 @@ matrix:
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['clang-3.4', 'g++-4.8', 'g++-4.8-multilib']
+          packages: ['clang-3.4', 'g++-4.8', 'g++-4.8-multilib', 'linux-libc-dev']
       env:
         - CXX=clang++
         - CX=clang++
