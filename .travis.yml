@@ -7,7 +7,7 @@ matrix:
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.9', 'g++-4.9-multilib', 'linux-libc-dev']
+          packages: ['g++-4.9', 'g++-4.9-multilib']
       env:
         - CXX=g++-4.9
         - CX=g++-4.9
@@ -18,7 +18,7 @@ matrix:
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['clang-3.4', 'g++-4.8', 'g++-4.8-multilib', 'linux-libc-dev']
+          packages: ['clang-3.4', 'g++-4.8', 'g++-4.8-multilib']
       env:
         - CXX=clang++
         - CX=clang++
@@ -26,7 +26,7 @@ matrix:
 
 install:
   - $CX --version
-  - ln -sv /usr/include/asm-generic /usr/include/asm
+  - sudo ln -sv /usr/include/asm-generic /usr/include/asm
 
 script:
   - cd ./build
