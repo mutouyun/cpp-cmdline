@@ -47,6 +47,11 @@ public:
     template <typename T>
     void print_usage(T&& out) const
     {
+        if (path_.empty())
+        {
+            out << "Must has at least one argument (the path of current program)." << std::endl;
+            return;
+        }
         size_t slash = path_.find_last_of('\\');
         if (slash == std::string::npos) slash = path_.find_last_of('/');
         std::string name = path_.substr(slash + 1);
@@ -91,8 +96,8 @@ public:
 
     void exec(int argc, const char * const argv[])
     {
-        path_ = argv[0];
-        if (argc == 1) this->print_usage();
+        if (argc >= 1) path_ = argv[0];
+        if (argc <= 1) this->print_usage();
         else
         {
             struct ST_opt
