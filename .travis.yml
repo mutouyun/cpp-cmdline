@@ -1,21 +1,30 @@
 language: cpp
 
-compiler: 
-  - gcc
-  - clang
+matrix:
+  include:
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.9']
+      env:
+        - CXX=g++-4.9
+        - CX=g++-4.9
+        - CC=gcc-4.9
 
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gcc-4.8 g++-4.8
-      - clang
+    - os: linux
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['clang-3.4', 'g++-4.8']
+      env:
+        - CXX=clang++
+        - CX=clang++
+        - CC=clang
 
 install:
-  - sudo apt-get -qq install gcc-4.8-multilib g++-4.8-multilib
-  - if [ "$CC" == "gcc" ]; then export CC=gcc-4.8 CXX=g++-4.8; fi
-  - export CX=$CXX
   - $CX --version
 
 script:
