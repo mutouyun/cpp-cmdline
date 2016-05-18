@@ -26,9 +26,7 @@ matrix:
 
 install:
   - $CX --version
-  - ls -l /usr/include/asm-generic/
-  - ls -l /usr/include/asm/
-  - cp --archive /usr/include/asm-generic /usr/include/asm
+  - ln -sv /usr/include/asm-generic /usr/include/asm
 
 script:
   - cd ./build
