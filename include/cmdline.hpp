@@ -68,7 +68,7 @@ public:
                 if (!o.default_.empty()) out << "=" << o.default_;
                 out << " ";
             }
-            out  << "[OPTIONS]..." << std::endl;
+            out << "[OPTIONS]..." << std::endl;
             out << "Options: " << std::endl;
             auto print_opt = [&](auto& o)
             {
