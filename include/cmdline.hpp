@@ -74,9 +74,10 @@ public:
             {
                 out << "  " << o.sname_ << ", " << o.lname_ << "\t" << o.description_;
                 if (!o.default_.empty()) out << "[=" << o.default_ << "]";
+                out << std::endl;
             };
-            for (auto& o: necessary_) { print_opt(o); out << std::endl; }
-            for (auto& o: optional_ ) { print_opt(o); out << std::endl; }
+            for (auto& o: necessary_) { print_opt(o); }
+            for (auto& o: optional_ ) { print_opt(o); }
         }
     }
 
@@ -94,10 +95,17 @@ public:
         }
     }
 
-    void exec(int argc, const char * const argv[])
+    void clear(void)
+    {
+        necessary_.clear();
+        optional_.clear();
+    }
+
+    template <typename T>
+    void exec(T&& out, int argc, const char * const argv[])
     {
         if (argc >= 1) path_ = argv[0];
-        if (argc <= 1) this->print_usage();
+        if (argc <= 1) this->print_usage(std::forward<T>(out));
         else
         {
             struct ST_opt
@@ -130,12 +138,17 @@ public:
                 foreach(necessary_, [&c_nec]{ ++c_nec; });
                 foreach(optional_ , []{});
             }
-            if (c_nec != necessary_.size() || exec_list.empty()) this->print_usage();
+            if (c_nec != necessary_.size() || exec_list.empty()) this->print_usage(std::forward<T>(out));
             else for (auto& e: exec_list)
             {
                 e.hd_(*this, e.cm_);
             }
         }
+    }
+
+    void exec(int argc, const char * const argv[])
+    {
+        this->exec(std::cout, argc, argv);
     }
 };
 
