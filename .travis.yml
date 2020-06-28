@@ -2,11 +2,6 @@ language: cpp
 os: linux
 dist: bionic
 
-addons:
-  apt:
-    packages:
-      - libc6-dev-i386
-
 compiler:
   - clang
   - gcc
