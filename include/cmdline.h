@@ -65,7 +65,11 @@ public:
             out << "[OPTIONS]..." << std::endl;
             out << "Options: " << std::endl;
             auto print_opt = [&](auto & o) {
-                out << "  " << o.sname_ << ", " << o.lname_ << "\t" << o.description_;
+                out << " ";
+                if (o.sname_ != nullptr) {
+                    out << " " << o.sname_ << ",";
+                }
+                out << " " << o.lname_ << " \t" << o.description_;
                 if (!o.default_.empty()) out << "[=" << o.default_ << "]";
                 out << std::endl;
             };
@@ -80,6 +84,9 @@ public:
 
     void push(options && opts) {
         for (auto && o : opts) {
+            if (o.lname_ == nullptr) {
+                continue;
+            }
             options * list = &(o.necessary_ ? necessary_ : optional_);
             list->emplace_back(std::move(o));
         }
@@ -107,8 +114,8 @@ public:
                 std::string o = a.substr(0, c);
                 auto foreach = [&](auto const & cc, auto && fr) {
                     for (auto it = cc.begin(); it != cc.end(); ++it) {
-                        if (o == it->sname_ || o == it->lname_) {
-                            exec_list.emplace_back(ST_opt{
+                        if (((it->sname_ != nullptr) && (o == it->sname_)) || (o == it->lname_)) {
+                            exec_list.emplace_back(ST_opt {
                                 it->handle_,
                                 c == std::string::npos ? it->default_ : a.substr(c + 1)
                             });

@@ -11,7 +11,7 @@ int main(int argc, char * argv[]) {
                 }
             },
             {
-                "-t", "--test", "You must use this option.", true, "",
+                nullptr, "--test", "You must use this option.", true, "",
                 [](auto &, auto &) { /*Do Nothing.*/ }
             },
             {
