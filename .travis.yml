@@ -8,6 +8,7 @@ compiler:
 
 before_install:
   - $CXX --version
+  - find /usr -name c++config.h
 
 script:
   - cd ./build
