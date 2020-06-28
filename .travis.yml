@@ -2,6 +2,11 @@ language: cpp
 os: linux
 dist: bionic
 
+addons:
+  apt:
+    packages:
+      - libc6-dev-i386
+
 compiler:
   - clang
   - gcc
@@ -9,7 +14,6 @@ compiler:
 before_install:
   - $CXX --version
   - export THIRD_PATH="/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/x86_64-linux-gnu"
-  - find /usr -name stubs-32.h
 
 script:
   - cd ./build
