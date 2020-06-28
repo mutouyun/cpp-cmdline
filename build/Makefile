@@ -4,9 +4,8 @@ export CC ?= gcc
 export CX ?= g++
 export LB ?= ar
 
-export CFLAGS ?= -pipe -frtti -Wall -Wextra -fexceptions -march=nocona -std=c++1y
+export CFLAGS ?= -pipe -Wall -frtti -fexceptions -std=c++14
 export LFLAGS ?= -Wl,-s
-export AFLAGS ?= -csr
 
 # Check os
 
