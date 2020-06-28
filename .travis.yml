@@ -9,8 +9,6 @@ compiler:
 before_install:
   - $CXX --version
 
-install: make get-deps
-
 script:
   - cd ./build
   - make debug=1 && make
