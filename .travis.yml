@@ -8,7 +8,7 @@ compiler:
 
 before_install:
   - $CXX --version
-  - find /usr -name c++config.h
+  - export THIRD_PATH=/usr/include/x86_64-linux-gnu/c++/7
 
 script:
   - cd ./build
