@@ -13,17 +13,11 @@ matrix:
   include:
     - compiler: gcc
       env:
-        - CXX=g++-8
-        - CX=g++-8
-        - CC=gcc-8
-
+        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
     - compiler: clang
-      env:
-        - CXX=clang++
-        - CX=clang++
-        - CC=clang
 
 before_install:
+  - eval "${MATRIX_EVAL}"
   - $CXX --version
 
 script:
