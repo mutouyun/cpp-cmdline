@@ -1,32 +1,30 @@
 language: cpp
+os: linux
+dist: xenial
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-8
 
 matrix:
   include:
-    - os: linux
-      compiler: gcc
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.9', 'g++-4.9-multilib']
+    - compiler: gcc
       env:
-        - CXX=g++-4.9
-        - CX=g++-4.9
-        - CC=gcc-4.9
+        - CXX=g++-8
+        - CX=g++-8
+        - CC=gcc-8
 
-    - os: linux
-      compiler: clang
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['clang-3.4', 'g++-4.8', 'g++-4.8-multilib']
+    - compiler: clang
       env:
         - CXX=clang++
         - CX=clang++
         - CC=clang
 
-install:
-  - $CX --version
-  - sudo ln -sv /usr/include/asm-generic /usr/include/asm
+before_install:
+  - $CXX --version
 
 script:
   - cd ./build
