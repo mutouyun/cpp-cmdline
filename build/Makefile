@@ -11,7 +11,7 @@ export LFLAGS ?= -Wl,-s
 
 os    = linux
 debug = 0
-bits  = 32
+bits  =
 
 ifeq ($(os), win)
 	# windows
