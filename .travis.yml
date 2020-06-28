@@ -8,7 +8,7 @@ compiler:
 
 before_install:
   - $CXX --version
-  - export THIRD_PATH=/usr/include/x86_64-linux-gnu/c++/7
+  - export THIRD_PATH="/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/x86_64-linux-gnu"
   - find /usr -name cdefs.h
 
 script:
