@@ -166,13 +166,6 @@ class parser {
         print_impl(std::forward<A>(args)...);
     }
 
-    template <typename ... A>
-    void print(A && ... args) const {
-        if (printer_) {
-            print_impl(std::forward<A>(args)...);
-        }
-    }
-
 public:
     parser() {
         set_printer(std::cout);
@@ -197,6 +190,13 @@ public:
         printer_ = [this, &o](str_view const & sv) {
             o << sv;
         };
+    }
+
+    template <typename ... A>
+    void print(A && ... args) const {
+        if (printer_) {
+            print_impl(std::forward<A>(args)...);
+        }
     }
 
     void print_usage() {
