@@ -138,7 +138,7 @@ public:
 };
 
 class parser;
-using handle_t = void(parser &, str_view const &);
+using handle_t = void(str_view const &);
 
 struct option {
     char const * sname_;
@@ -199,7 +199,7 @@ public:
         }
     }
 
-    void print_usage() {
+    void print_usage() const {
         if (path_.empty()) {
             print("Must has at least one argument (the path of current program).\n");
             return;
@@ -208,7 +208,7 @@ public:
         if (slash == std::string::npos) slash = path_.find_last_of('/');
         str_view name = path_.substr(slash + 1);
         if (usage_) {
-            usage_(*this, name);
+            usage_(name);
         }
         else {
             print("Usage: ", name, " ");
@@ -252,6 +252,7 @@ public:
         if (argc >= 1) path_ = argv[0];
         if (argc <= 1) {
             print_usage();
+            return -1;
         }
         else {
             struct ST_opt {
@@ -280,9 +281,10 @@ public:
             }
             if ((c_nec != necessary_.size()) || exec_list.empty()) {
                 print_usage();
+                return -1;
             }
             else for (ST_opt & e : exec_list) {
-                e.hd_(*this, e.cm_);
+                e.hd_(e.cm_);
             }
         }
         return 0;
