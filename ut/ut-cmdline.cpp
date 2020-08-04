@@ -10,15 +10,15 @@ int main(int argc, char * argv[]) {
     a.push({
             {
                 "-h", "--help", "Print usage.", false, "",
-                [](auto & a, auto &) {
+                [&a](auto &) {
                     a.print_usage();
                 }
             }, {
                 nullptr, "--test", "You must use this option.", true, "",
-                [](auto &, auto &) { /*Do Nothing.*/ }
+                [](auto &) { /*Do Nothing.*/ }
             }, {
                 "-o", "--output", "Print text.", true, "Hello World!",
-                [](auto & a, auto & str) {
+                [&a](auto & str) {
                     a.print(str, "\n");
                 }
             }
