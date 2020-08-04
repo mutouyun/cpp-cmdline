@@ -32,7 +32,7 @@ int main(int argc, char * argv[]) {
         "-o=whatever"
     };
     a.set_printer(ss);
-    ASSERT_EQ(a.exec(argc, argv), 0);
+    ASSERT_EQ(a.exec(3, args), 0);
     ASSERT_EQ(ss.str(), "whatever\n");
 
     return 0;
