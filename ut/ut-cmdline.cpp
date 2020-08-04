@@ -23,7 +23,7 @@ int main(int argc, char * argv[]) {
                 }
             }
         });
-    ASSERT_EQ(a.exec(argc, argv), 0);
+    ASSERT_EQ(a.exec(argc, argv), -1);
 
     std::ostringstream ss;
     char const * args[] = {
