@@ -22,23 +22,22 @@ For using it, you only need to include cmdline.hpp.
 int main(int argc, char* argv[])
 {
     cmdline::parser a;
-    a.push(cmdline::options
-    {
+    a.push({
         {
             "-h",                                   // short name
             "--help",                               // long name
             "Print usage.",                         // description
             false,                                  // is necessary or not
             "",                                     // default value
-            [](auto& a, auto&) { a.print_usage(); } // handle for doing something
+            [&a](auto&) { a.print_usage(); } // handle for doing something
         },
         {
             "-t", "--test", "You must use this option.", true, "", 
-            [](auto&, auto&) { /*Do Nothing.*/ }
+            [](auto&) { /*Do Nothing.*/ }
         },
         {
             "-o", "--output", "Print text.", true, "Hello World!",
-            [](auto&, auto& str) {
+            [](auto& str) {
                 std::cout << str << std::endl;
             }
         }
