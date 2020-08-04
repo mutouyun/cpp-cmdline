@@ -115,25 +115,14 @@ public:
         }
         if (lhs.empty() && rhs.empty()) return true;
         if (lhs.empty() || rhs.empty()) return false;
-
-        str_view const * longer;
-        std::size_t e;
-        if (lhs.size() < rhs.size()) {
-            longer = &rhs;
-            e = lhs.size();
+        if (lhs.size() == rhs.size()) {
+            return std::memcmp(lhs.data(), rhs.data(), lhs.size()) == 0;
         }
-        else if (lhs.size() > rhs.size()) {
-            longer = &lhs;
-            e = rhs.size();
+        std::size_t e = std::min<std::size_t>(lhs.size(), rhs.size());
+        if (std::memcmp(lhs.data(), rhs.data(), e) != 0) {
+            return false;
         }
-        // lhs.size() == rhs.size()
-        else return std::memcmp(lhs.data(), rhs.data(), lhs.size()) == 0;
-
-        for (std::size_t i = 0; i < e; ++i) {
-            if (lhs[i] != rhs[i]) return false;
-        }
-        assert(longer != nullptr);
-        return (*longer)[e] == '\0';
+        return ((lhs.size() < rhs.size()) ? rhs : lhs)[e] == '\0';
     }
 
     friend bool operator!=(str_view const & lhs, str_view const & rhs) noexcept {
@@ -149,7 +138,7 @@ public:
 };
 
 class parser;
-using handle_t = void(parser const &, str_view const &);
+using handle_t = void(parser &, str_view const &);
 
 struct option {
     char const * sname_;
@@ -166,22 +155,53 @@ class parser {
 
     options_t necessary_, optional_;
     std::function<handle_t> usage_;
+    std::function<void(str_view const &)> printer_;
     str_view path_;
 
+    void print_impl() const noexcept {}
+
+    template <typename T, typename ... A>
+    void print_impl(T && t, A && ... args) const {
+        printer_(std::forward<T>(t));
+        print_impl(std::forward<A>(args)...);
+    }
+
+    template <typename ... A>
+    void print(A && ... args) const {
+        if (printer_) {
+            print_impl(std::forward<A>(args)...);
+        }
+    }
+
 public:
-    options_t &       necessary(void)       { return necessary_; }
-    options_t const & necessary(void) const { return necessary_; }
+    parser() {
+        set_printer(std::cout);
+    }
 
-    options_t &       optional(void)       { return optional_; }
-    options_t const & optional(void) const { return optional_; }
+    options_t &       necessary()       noexcept { return necessary_; }
+    options_t const & necessary() const noexcept { return necessary_; }
 
-    std::function<handle_t> &       usage(void)       { return usage_; }
-    std::function<handle_t> const & usage(void) const { return usage_; }
+    options_t &       optional()       noexcept { return optional_; }
+    options_t const & optional() const noexcept { return optional_; }
 
-    template <typename T>
-    void print_usage(T && out) const {
+    std::function<handle_t> &       usage()       noexcept { return usage_; }
+    std::function<handle_t> const & usage() const noexcept { return usage_; }
+
+    template <typename F>
+    void set_usage(F && u) {
+        usage_ = std::forward<F>(u);
+    }
+
+    template <typename T, typename = decltype(std::declval<T>() << std::declval<str_view>())>
+    void set_printer(T && o) {
+        printer_ = [this, &o](str_view const & sv) {
+            o << sv;
+        };
+    }
+
+    void print_usage() const {
         if (path_.empty()) {
-            out << "Must has at least one argument (the path of current program)." << std::endl;
+            print("Must has at least one argument (the path of current program).", std::endl);
             return;
         }
         std::size_t slash = path_.find_last_of('\\');
@@ -191,30 +211,26 @@ public:
             usage_(*this, name);
         }
         else {
-            out << "Usage: " << name << " ";
+            print("Usage: ", name, " ");
             if (!necessary_.empty()) for (auto & o : necessary_) {
-                out << o.lname_;
-                if (!o.default_.empty()) out << "=" << o.default_;
-                out << " ";
+                print(o.lname_);
+                if (!o.default_.empty()) print("=", o.default_);
+                print(" ");
             }
-            out << "[OPTIONS]..." << std::endl;
-            out << "Options: " << std::endl;
+            print("[OPTIONS]...", std::endl);
+            print("Options: ", std::endl);
             auto print_opt = [&](auto & o) {
-                out << " ";
+                print(" ");
                 if (o.sname_ != nullptr) {
-                    out << " " << o.sname_ << ",";
+                    print(" ", o.sname_, ",");
                 }
-                out << " " << o.lname_ << " \t" << o.description_;
-                if (!o.default_.empty()) out << "[=" << o.default_ << "]";
-                out << std::endl;
+                print(" ", o.lname_, " \t", o.description_);
+                if (!o.default_.empty()) print("[=", o.default_, "]");
+                print(std::endl);
             };
             for (auto & o : necessary_) { print_opt(o); }
             for (auto & o : optional_ ) { print_opt(o); }
         }
-    }
-
-    void print_usage(void) const {
-        this->print_usage(std::cout);
     }
 
     void push(options_t && opts) {
@@ -232,11 +248,10 @@ public:
         optional_ .clear();
     }
 
-    template <typename T>
-    int exec(T && out, int argc, char const * const argv[]) {
+    int exec(int argc, char const * const argv[]) {
         if (argc >= 1) path_ = argv[0];
         if (argc <= 1) {
-            this->print_usage(std::forward<T>(out));
+            print_usage();
         }
         else {
             struct ST_opt {
@@ -264,17 +279,13 @@ public:
                 foreach(optional_ , [] {});
             }
             if ((c_nec != necessary_.size()) || exec_list.empty()) {
-                this->print_usage(std::forward<T>(out));
+                print_usage();
             }
             else for (ST_opt & e : exec_list) {
                 e.hd_(*this, e.cm_);
             }
         }
         return 0;
-    }
-
-    int exec(int argc, char const * const argv[]) {
-        return this->exec(std::cout, argc, argv);
     }
 };
 
