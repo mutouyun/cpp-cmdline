@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <sstream>
 
 #include "cmdline.h"
 
@@ -17,11 +18,22 @@ int main(int argc, char * argv[]) {
                 [](auto &, auto &) { /*Do Nothing.*/ }
             }, {
                 "-o", "--output", "Print text.", true, "Hello World!",
-                [](auto &, auto & str) {
-                    std::cout << str << std::endl;
+                [](auto & a, auto & str) {
+                    a.print(str, "\n");
                 }
             }
         });
     ASSERT_EQ(a.exec(argc, argv), 0);
+
+    std::ostringstream ss;
+    char const * args[] = {
+        argv[0],
+        "--test",
+        "-o=whatever"
+    };
+    a.set_printer(ss);
+    ASSERT_EQ(a.exec(argc, argv), 0);
+    ASSERT_EQ(ss.str(), "whatever\n");
+
     return 0;
 }
