@@ -115,10 +115,11 @@ public:
         }
         if (lhs.empty() && rhs.empty()) return true;
         if (lhs.empty() || rhs.empty()) return false;
-        if (lhs.size() == rhs.size()) {
-            return std::memcmp(lhs.data(), rhs.data(), lhs.size()) == 0;
+        std::size_t lsz = lhs.length(), rsz = rhs.length();
+        if (lsz == rsz) {
+            return std::memcmp(lhs.data(), rhs.data(), lsz) == 0;
         }
-        std::size_t e = std::min<std::size_t>(lhs.size(), rhs.size());
+        std::size_t e = std::min<std::size_t>(lsz, rsz);
         if (std::memcmp(lhs.data(), rhs.data(), e) != 0) {
             return false;
         }
