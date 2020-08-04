@@ -199,9 +199,9 @@ public:
         };
     }
 
-    void print_usage() const {
+    void print_usage() {
         if (path_.empty()) {
-            print("Must has at least one argument (the path of current program).", std::endl);
+            print("Must has at least one argument (the path of current program).\n");
             return;
         }
         std::size_t slash = path_.find_last_of('\\');
@@ -217,8 +217,8 @@ public:
                 if (!o.default_.empty()) print("=", o.default_);
                 print(" ");
             }
-            print("[OPTIONS]...", std::endl);
-            print("Options: ", std::endl);
+            print("[OPTIONS]...\n");
+            print("Options: \n");
             auto print_opt = [&](auto & o) {
                 print(" ");
                 if (o.sname_ != nullptr) {
@@ -226,7 +226,7 @@ public:
                 }
                 print(" ", o.lname_, " \t", o.description_);
                 if (!o.default_.empty()) print("[=", o.default_, "]");
-                print(std::endl);
+                print("\n");
             };
             for (auto & o : necessary_) { print_opt(o); }
             for (auto & o : optional_ ) { print_opt(o); }
